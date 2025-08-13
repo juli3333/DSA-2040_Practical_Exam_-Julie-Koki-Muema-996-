@@ -1,0 +1,77 @@
+erDiagram
+    FACT_SALES }o--|| DIM_DATE : "date_key"
+    FACT_SALES }o--|| DIM_PRODUCT : "product_key"
+    FACT_SALES }o--|| DIM_CUSTOMER : "customer_key"
+    FACT_SALES }o--|| DIM_STORE : "store_key"
+
+    FACT_INVENTORY_SNAPSHOT }o--|| DIM_DATE : "date_key"
+    FACT_INVENTORY_SNAPSHOT }o--|| DIM_PRODUCT : "product_key"
+    FACT_INVENTORY_SNAPSHOT }o--|| DIM_STORE : "store_key"
+
+    DIM_DATE {
+        INTEGER date_key PK "YYYYMMDD surrogate"
+        TEXT    full_date_iso  "YYYY-MM-DD"
+        INTEGER day_of_month
+        INTEGER month_num
+        TEXT    month_name
+        INTEGER quarter
+        INTEGER year
+        INTEGER is_weekend
+    }
+
+    DIM_PRODUCT {
+        INTEGER product_key PK
+        TEXT    product_sku
+        TEXT    product_name
+        TEXT    category
+        TEXT    subcategory
+        TEXT    brand
+        TEXT    unit_of_measure
+        REAL    unit_cost
+        TEXT    active_flag
+    }
+
+    DIM_CUSTOMER {
+        INTEGER customer_key PK
+        TEXT    customer_id_bk  "business key"
+        TEXT    full_name
+        TEXT    gender
+        TEXT    birth_date_iso
+        INTEGER age_years
+        TEXT    city
+        TEXT    region
+        TEXT    country
+    }
+
+    DIM_STORE {
+        INTEGER store_key PK
+        TEXT    store_id_bk
+        TEXT    store_name
+        TEXT    city
+        TEXT    region
+        TEXT    country
+    }
+
+    FACT_SALES {
+        INTEGER sales_id PK
+        INTEGER date_key FK
+        INTEGER product_key FK
+        INTEGER customer_key FK
+        INTEGER store_key FK
+        INTEGER quantity
+        REAL    unit_price
+        REAL    discount_amount
+        REAL    sales_amount  "ETL: qty*price - discount"
+    }
+
+    FACT_INVENTORY_SNAPSHOT {
+        INTEGER snapshot_id PK
+        INTEGER date_key FK
+        INTEGER product_key FK
+        INTEGER store_key FK
+        INTEGER on_hand_qty
+        INTEGER on_order_qty
+        INTEGER safety_stock
+        INTEGER reorder_point
+    }
+
